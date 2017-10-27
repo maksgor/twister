@@ -1,7 +1,7 @@
 const KoaRouter = require('koa-router');
 const { graphqlKoa, graphiqlKoa } = require('apollo-server-koa');
 
-const { FeatureFlagsSchema } = require('./schema');
+const { FeatureFlagsSchema } = require('./graphql/schema');
 
 const router = new KoaRouter();
 

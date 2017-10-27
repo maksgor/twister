@@ -2,14 +2,18 @@ const Koa = require('koa');
 const koaBody = require('koa-bodyparser');
 
 const { initRouter } = require('./routing');
-const { initDb } = require('./database');
+const db = require('./models');
 
-const app = new Koa();
 const PORT = 5000;
 
-app.context.db = initDb();
+const app = new Koa();
+
+app.context.db = db;
 app.use(koaBody());
+
 const router = initRouter(app.context);
 app.use(router.routes());
 app.use(router.allowedMethods());
+
 app.listen(PORT);
+console.log('Application started on port:', PORT);

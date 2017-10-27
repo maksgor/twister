@@ -6,10 +6,10 @@ const { FeatureFlagsSchema } = require('./graphql/schema');
 const router = new KoaRouter();
 
 function initRouter(appCtx = {}) {
-    return router
-        .post('/graphql', graphqlKoa({ schema: FeatureFlagsSchema, context: appCtx }))
-        .get('/graphql', graphqlKoa({ schema: FeatureFlagsSchema, context: appCtx }))
-        .get('/graphiql', graphiqlKoa({ endpointURL: '/graphql', context: appCtx }));
+  return router
+    .post('/graphql', graphqlKoa({ schema: FeatureFlagsSchema, context: appCtx }))
+    .get('/graphql', graphqlKoa({ schema: FeatureFlagsSchema, context: appCtx }))
+    .get('/graphiql', graphiqlKoa({ endpointURL: '/graphql', context: appCtx }));
 }
 
 

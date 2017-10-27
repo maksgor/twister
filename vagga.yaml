@@ -1,0 +1,45 @@
+minimum-vagga: 0.8.0
+
+containers:
+  base-nodejs:
+    environ:
+      NODE_PATH: /usr/lib/node_modules
+    setup:
+    - !Ubuntu xenial
+    - !AptTrust
+      keys: [1655A0AB68576280]
+    - !UbuntuRepo
+      url: https://deb.nodesource.com/node_8.x
+      suite: xenial
+      components: [main]
+    - !Install
+      - nodejs
+    - !BuildDeps
+      - dh-autoreconf
+      - libpng-dev
+    - !NpmConfig
+      install-node: false
+    - !EnsureDir /work/node_modules
+    - !EnsureDir /usr/lib/node_modules/.cache
+    - !NpmDependencies
+      package: true
+      peer: true
+      dev: true
+      optional: true
+
+commands:
+  run: !Supervise
+    description: Run server in development mode
+    kill-unresponsive-after: 10
+    children:
+      server: !Command
+        container: base-nodejs
+        run: node src/index.js
+
+  run-inspect: !Supervise
+    description: Run server in node-inspect mode
+    kill-unresponsive-after: 10
+    children:
+      server: !Command
+        container: base-nodejs
+        run: node --inspect src/index.js

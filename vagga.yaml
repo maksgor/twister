@@ -43,3 +43,9 @@ commands:
       server: !Command
         container: base-nodejs
         run: node --inspect src/index.js
+
+  eslint: !Command
+    description: Run eslint check
+    container: base-nodejs
+    run: |
+      eslint . --ext .jsx --ext .js js/

@@ -16,4 +16,4 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 app.listen(PORT);
-console.log('Application started on port:', PORT);
+console.log('Application started on port:', PORT); // eslint-disable-line no-console

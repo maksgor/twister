@@ -5,7 +5,6 @@ const {
     GraphQLSchema,
     GraphQLString,
     GraphQLNonNull,
-    GraphQLList
 } = require('graphql');
 const graphqlFields = require('graphql-fields');
 
@@ -27,15 +26,6 @@ const FeatureFlagType = new GraphQLObjectType({
     }
 });
 
-const FeatureFlagsListType = new GraphQLObjectType({
-    name: 'FeatureFlagList',
-    fields: {
-        schema: {
-            type: new GraphQLList(FeatureFlagType)
-        }
-    }
-});
-
 const FeatureFlagsSchema = new GraphQLSchema({
     query: new GraphQLObjectType({
         name: 'Root',
@@ -54,17 +44,7 @@ const FeatureFlagsSchema = new GraphQLSchema({
                         where: args
                     });
                 }
-            },
-            flags: {
-                type: FeatureFlagsListType,
-                args: {},
-                resolve: async (_, args, ctx, info) => {
-                    const requestedFields = Object.keys(graphqlFields(info));
-                    return await ctx.db.FeatureFlag.findAll({
-                        attributes: requestedFields
-                    });
-                }
-            },
+            }
         },
     }),
 });

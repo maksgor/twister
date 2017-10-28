@@ -49,3 +49,27 @@ commands:
     container: base-nodejs
     run: |
       npm run lint
+
+  db-migrate: !Command
+    description: Migrate db to latest version
+    container: base-nodejs
+    run: |
+      sequelize db:migrate
+
+  db-downgrade: !Command
+    description: Revert last migration
+    container: base-nodejs
+    run: |
+      sequelize db:migrate:undo
+
+  db-seeds-apply: !Command
+    description: Apply prepared seeders files
+    container: base-nodejs
+    run: |
+      sequelize db:seed:all
+
+  db-seeds-undo: !Command
+    description: Remove all seeds
+    container: base-nodejs
+    run: |
+      sequelize db:seed:undo:all

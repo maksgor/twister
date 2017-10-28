@@ -44,8 +44,8 @@ commands:
         container: base-nodejs
         run: node --inspect src/index.js
 
-  eslint: !Command
+  lint: !Command
     description: Run eslint check
     container: base-nodejs
     run: |
-      eslint . --ext .jsx --ext .js js/
+      npm run lint

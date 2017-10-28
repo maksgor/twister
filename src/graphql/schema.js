@@ -5,6 +5,7 @@ const {
   GraphQLSchema,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLList,
 } = require('graphql');
 const graphqlFields = require('graphql-fields');
 
@@ -40,6 +41,24 @@ const FeatureFlagsSchema = new GraphQLSchema({
         resolve: async (_, args, ctx, info) => {
           const requestedFields = Object.keys(graphqlFields(info));
           return ctx.db.FeatureFlag.findOne({
+            attributes: requestedFields,
+            where: args,
+          });
+        },
+      },
+      flags: {
+        type: new GraphQLList(FeatureFlagType),
+        args: {
+          name: {
+            type: GraphQLString,
+          },
+          enabled: {
+            type: GraphQLBoolean,
+          },
+        },
+        resolve: async (_, args, ctx, info) => {
+          const requestedFields = Object.keys(graphqlFields(info));
+          return ctx.db.FeatureFlag.findAll({
             attributes: requestedFields,
             where: args,
           });

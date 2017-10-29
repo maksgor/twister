@@ -69,4 +69,7 @@ const FeatureFlagsSchema = new GraphQLSchema({
 });
 
 
-module.exports = { FeatureFlagsSchema };
+module.exports = {
+  FeatureFlagsSchema,
+  FeatureFlagType,
+};

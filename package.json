@@ -4,7 +4,7 @@
   "description": "Feature-flags service with GraphQL API and user-friendly web-interface",
   "main": "src/index.js",
   "scripts": {
-    "test": "exit 0",
+    "test": "mocha",
     "lint": "eslint . --ext .jsx --ext .js js/"
   },
   "keywords": [
@@ -26,10 +26,13 @@
     "sequelize-cli": "^3.0.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.4.0"
+    "eslint-plugin-react": "^7.4.0",
+    "mocha": "^4.0.1"
   }
 }

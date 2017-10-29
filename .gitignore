@@ -1,3 +1,5 @@
 .vagga/
 .idea/
 node_modules/
+static/build
+.babel.json

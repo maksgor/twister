@@ -5,7 +5,7 @@ const {
   GraphQLBoolean,
   GraphQLString,
 } = require('graphql');
-const { FeatureFlagType } = require('../src/graphql/schema');
+const FeatureFlagType = require('../src/graphql/types/FeatureFlagType');
 
 describe('GraphQL Schema', () => {
   describe('FeatureFlagType', () => {

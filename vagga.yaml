@@ -4,6 +4,7 @@ containers:
   base-nodejs:
     environ:
       NODE_PATH: /usr/lib/node_modules
+      BABEL_CACHE_PATH: /work/.babel.json
     setup:
     - !Ubuntu xenial
     - !AptTrust
@@ -43,6 +44,12 @@ commands:
       server: !Command
         container: base-nodejs
         run: node --inspect src/index.js
+
+  build-frontend: !Command
+    description: Build frontend stuff
+    container: base-nodejs
+    run: |
+      webpack
 
   lint: !Command
     description: Run eslint check

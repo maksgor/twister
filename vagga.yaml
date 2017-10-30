@@ -4,6 +4,7 @@ containers:
   base-nodejs:
     environ:
       NODE_PATH: /usr/lib/node_modules
+      PROJECT_DEPS: /usr/lib
       BABEL_CACHE_PATH: /work/.babel.json
     setup:
     - !Ubuntu xenial

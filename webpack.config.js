@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const production = process.env.NODE_ENV === 'production';
+const PROJECT_DEPS = process.env.PROJECT_DEPS || __dirname;
 
 module.exports = {
   entry: {
@@ -30,13 +31,13 @@ module.exports = {
   resolve: {
     modules: [
       path.resolve(__dirname, 'src/frontend'),
-      path.resolve(__dirname, 'node_modules'),
+      path.resolve(PROJECT_DEPS, 'node_modules'),
       'node_modules',
     ],
     extensions: ['.js', '.jsx', 'css', 'less', 'scss'],
   },
   resolveLoader: {
-    modules: [path.resolve(__dirname, 'node_modules'), 'node_modules'],
+    modules: [path.resolve(PROJECT_DEPS, 'node_modules'), 'node_modules'],
   },
   plugins: [
     new webpack.DefinePlugin({

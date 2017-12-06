@@ -28,58 +28,45 @@ containers:
       peer: true
       dev: true
       optional: true
+    - !Sh locale-gen uk_UA.utf8
+    - !Sh update-locale
+
 
   postgres:
     setup:
-    - !Ubuntu xenial
-    - !Sh |
-        addgroup --system --gid 200 postgres
-        adduser --uid 200 --system --home /data --no-create-home \
-            --shell /bin/bash --group --gecos "PostgreSQL administrator" \
-            postgres
-    - !Install [postgresql-9.5]
-    - !EnsureDir /data
-    environ:
+      - !Container base-nodejs
+      - !Install
+        - postgresql-9.5
+        - postgresql-client-9.5
+      - !EnsureDir /data
+      - !EnsureDir /work/tmp_data
+    environ: &PGDEV_ENVIRON
       PG_PORT: 5433
-      PG_HOST: 127.0.0.1
       PG_DB: twister
-      PGDATA: /data
-      PG_BIN: /usr/lib/postgresql/9.5/bin
       PG_USER: postgres
       PG_PASSWORD: postgres
+      PGDATA: /data
+      PG_BIN: /usr/lib/postgresql/9.5/bin
     volumes:
-      /data: !Persistent
-        name: postgres
-        owner-uid: 200
-        owner-gid: 200
-        init-command: _pg-init
-      /run: !Tmpfs
-        subdirs:
-          postgresql: { mode: 0o777 }
+      /data: !BindRW /work/tmp_data
 
 commands:
-  _pg-init: !Command
-    description: Init postgres database
-    container: postgres
-    user-id: 200
-    group-id: 200
-    run: |
-      set -ex
-      ls -la /data
-      $PG_BIN/pg_ctl initdb
-      $PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start
-      $PG_BIN/createuser -h 127.0.0.1 -p $PG_PORT vagga
-      $PG_BIN/createdb -h 127.0.0.1 -p $PG_PORT $PG_DB -O vagga
-      $PG_BIN/pg_ctl stop
-
   postgres: &postgres !Command
-    description: Run postgres database
+    description: Run PostgreSQL server
     container: postgres
-    user-id: 200
-    group-id: 200
-    run: |
-      trap "$PG_BIN/pg_ctl -w stop; trap - INT; kill -INT $$" INT
-      $PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start
+    run: &run-postgres |
+      chown postgres:postgres $PGDATA
+      chmod 0700 $PGDATA
+      if [ ! -f $PGDATA/PG_VERSION ]
+      then
+        su postgres -c "$PG_BIN/initdb -D $PGDATA -E utf-8 --locale=uk_UA.utf-8"
+        su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start"
+        su postgres -c "$PG_BIN/psql -h 127.0.0.1 -p $PG_PORT -c \"CREATE USER $PG_USER WITH PASSWORD '$PG_PASSWORD';\""
+        su postgres -c "$PG_BIN/psql -h 127.0.0.1 -p $PG_PORT -c \"CREATE ROLE $PG_USER WITH PASSWORD '$PG_PASSWORD';\""
+        su postgres -c "$PG_BIN/createdb -h 127.0.0.1 -p $PG_PORT $PG_DB -O $PG_USER"
+      else
+        su postgres -c "$PG_BIN/pg_ctl -w -o '-F --port=$PG_PORT -k /tmp' start"
+      fi
       sleep infinity
 
   run: !Supervise
